@@ -152,9 +152,9 @@ except Exception as e:
     st.info("🔧 Please ensure 'Asteroid_Data.db' is in the same directory as this script.")
 
 # Helper function to run and display SQL queries with enhanced visualization
-def show_query(run_query(), show_chart=True):
+def show_query(query, show_chart=True):
     try:
-        df = pd.read_sql_query(query, conn)
+        df = pd.read_sql_query(run_query())
         
         # Display dataframe with enhanced styling
         st.dataframe(df, use_container_width=True, height=400)
