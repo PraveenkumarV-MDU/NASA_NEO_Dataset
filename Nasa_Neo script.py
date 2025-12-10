@@ -154,7 +154,7 @@ except Exception as e:
 # Helper function to run and display SQL queries with enhanced visualization
 def show_query(query, show_chart=True):
     try:
-        df = pd.read_sql_query(query, conn)
+        df = pd.read_sql_query(query, run_query)
         
         # Display dataframe with enhanced styling
         st.dataframe(df, use_container_width=True, height=400)
