@@ -1,4 +1,3 @@
-
 import streamlit as st
 import mysql.connector
 import pandas as pd
@@ -227,14 +226,14 @@ queries = {
     ''',
 
     "2. Average velocity per asteroid": '''
-        SELECT neo_reference_id, AVG(relative_velocity_kmph) AS avg_velocity
+        SELECT neo_reference_id, AVG(relative_velocity_km_per_hour) AS avg_velocity
         FROM close_approach
         GROUP BY neo_reference_id
         ORDER BY avg_velocity DESC
     ''',
 
     "3. Top 10 fastest asteroids": '''
-        SELECT neo_reference_id, MAX(relative_velocity_kmph) AS max_velocity
+        SELECT neo_reference_id, MAX(relative_velocity_km_per_hour) AS max_velocity
         FROM close_approach
         GROUP BY neo_reference_id
         ORDER BY max_velocity DESC
@@ -260,7 +259,7 @@ queries = {
     ''',
 
     "6. Fastest ever approach": '''
-        SELECT neo_reference_id, MAX(relative_velocity_kmph) AS fastest_speed
+        SELECT neo_reference_id, MAX(relative_velocity_km_per_hour) AS fastest_speed
         FROM close_approach
         GROUP BY neo_reference_id
         ORDER BY fastest_speed DESC
@@ -290,10 +289,10 @@ queries = {
     ''',
 
     "10. Velocity > 50,000 km/h": '''
-        SELECT DISTINCT a.name, ca.relative_velocity_kmph
+        SELECT DISTINCT a.name, ca.relative_velocity_km_per_hour
         FROM close_approach ca
         JOIN asteroids a ON ca.neo_reference_id = a.id
-        WHERE ca.relative_velocity_kmph > 50000
+        WHERE ca.relative_velocity_km_per_hour > 50000
     ''',
 
     "11. Approaches per month": '''
@@ -483,7 +482,7 @@ with col2:
 filter_query = f"""
 SELECT a.name,
        ca.close_approach_date,
-       ca.relative_velocity_kmph,
+       ca.relative_velocity_km_per_hour,
        ca.miss_distance_km,
        ca.miss_distance_lunar,
        a.estimated_diameter_min_km,
@@ -494,7 +493,7 @@ JOIN asteroids a ON ca.neo_reference_id = a.id
 WHERE DATE(ca.close_approach_date) >= DATE('{selected_date}')
   AND ca.astronomical BETWEEN {min_au} AND {max_au}
   AND ca.miss_distance_lunar BETWEEN {min_ld} AND {max_ld}
-  AND ca.relative_velocity_kmph BETWEEN {min_velocity} AND {max_velocity}
+  AND ca.relative_velocity_km_per_hour BETWEEN {min_velocity} AND {max_velocity}
   AND a.estimated_diameter_max_km BETWEEN {min_diameter} AND {max_diameter}
 """
 
