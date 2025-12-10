@@ -20,206 +20,134 @@ st.set_page_config(
 # ----------------------------
 st.markdown(
     """
-    <style>
-    /* Global background + typography */
-    .main {
-        background: radial-gradient(circle at top left, #0f172a 0, #020617 45%, #000000 100%);
-        color: #e5e7eb;
-        font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-    }
+<style>
 
-    .block-container {
-        padding-top: 1.5rem;
-        padding-bottom: 3rem;
-        padding-left: 2.5rem;
-        padding-right: 2.5rem;
-    }
+/* ================= GLOBAL ================= */
+.main {
+    background: radial-gradient(circle at top left, #0f172a 0, #020617 45%, #000000 100%);
+    color: #e5e7eb;
+    font-family: "Inter", system-ui, sans-serif;
+}
+.block-container {
+    padding-top: 1.5rem;
+    padding-bottom: 3rem;
+    padding-left: 2.5rem;
+    padding-right: 2.5rem;
+}
 
-    /* Sidebar styling */
-    section[data-testid="stSidebar"] {
-        background: rgba(15, 23, 42, 0.94);
-        backdrop-filter: blur(18px);
-        border-right: 1px solid rgba(148, 163, 184, 0.25);
-        color: #e5e7eb;
-    }
-    section[data-testid="stSidebar"] .sidebar-content {
-        padding-top: 1.2rem;
-    }
+/* ================= SIDEBAR ================= */
+section[data-testid="stSidebar"] {
+    background: rgba(15, 23, 42, 0.94);
+    border-right: 1px solid rgba(148, 163, 184, 0.25);
+    backdrop-filter: blur(18px);
+}
+.sidebar-header { padding-bottom: 0.5rem; }
+.sidebar-title {
+    font-weight: 700; font-size: 1.1rem;
+    display: flex; align-items: center; gap: 0.5rem;
+}
+.sidebar-subtitle {
+    font-size: .78rem; opacity: .75;
+    margin-bottom: .8rem;
+}
 
-    .sidebar-header {
-        padding-bottom: 0.5rem;
-    }
-    .sidebar-title {
-        font-weight: 700;
-        font-size: 1.1rem;
-        letter-spacing: .03em;
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        margin-bottom: 0.3rem;
-    }
-    .sidebar-subtitle {
-        font-size: 0.78rem;
-        opacity: 0.75;
-        margin-bottom: 0.8rem;
-    }
-    .sidebar-category-label {
-        font-size: 0.82rem;
-        font-weight: 600;
-        text-transform: uppercase;
-        letter-spacing: .08em;
-        opacity: 0.75;
-        margin-top: 0.3rem;
-        margin-bottom: 0.3rem;
-    }
+/* ================= SIDEBAR BUTTONS ================= */
+/* Default button */
+section[data-testid="stSidebar"] .stButton > button {
+    width: 100%;
+    border-radius: 999px;
+    padding: .45rem .8rem;
+    font-size: .84rem; font-weight: 500;
+    text-align: left;
 
-    /* Expander tweaks */
-    details > summary {
-        font-weight: 600;
-        letter-spacing: .04em;
-    }
+    background: linear-gradient(135deg, #111827, #0f172a);
+    border: 1px solid rgba(148,163,184,0.55);
+    color: #f1f5f9;
 
-    /* Hero banner */
-    .hero-card {
-        margin-top: 0.5rem;
-        border-radius: 1.75rem;
-        padding: 1.6rem 2.1rem;
-        background: radial-gradient(circle at top left, #0ea5e9 0, #1d4ed8 40%, #020617 100%);
-        box-shadow:
-            0 22px 45px rgba(15, 23, 42, 0.9),
-            0 0 0 1px rgba(148, 163, 184, 0.25);
-        position: relative;
-        overflow: hidden;
-        color: #f9fafb;
-    }
-    .hero-card::after {
-        content: "";
-        position: absolute;
-        inset: 0;
-        background-image:
-            radial-gradient(circle at 10% 0%, rgba(248, 250, 252, 0.18) 0, transparent 40%),
-            radial-gradient(circle at 90% 100%, rgba(52, 211, 153, 0.16) 0, transparent 55%);
-        opacity: 0.85;
-        pointer-events: none;
-    }
-    .hero-inner {
-        position: relative;
-        z-index: 1;
-        display: flex;
-        flex-direction: column;
-        gap: 0.35rem;
-    }
-    .hero-pill {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.35rem;
-        border-radius: 999px;
-        padding: 0.18rem 0.7rem;
-        font-size: 0.75rem;
-        background: rgba(15, 23, 42, 0.35);
-        border: 1px solid rgba(226, 232, 240, 0.25);
-        width: fit-content;
-    }
-    .hero-title {
-        font-size: clamp(1.8rem, 2.1vw, 2.3rem);
-        font-weight: 800;
-        letter-spacing: .04em;
-    }
-    .hero-subtitle {
-        font-size: 0.95rem;
-        opacity: 0.9;
-        max-width: 720px;
-    }
+    box-shadow: 0 8px 15px rgba(0,0,0,0.4);
+    transition: all .18s ease-in-out;
+}
 
-    /* Metric cards */
-    .metric-row {
-        margin-top: 1.3rem;
-        display: grid;
-        grid-template-columns: repeat(4, minmax(0, 1fr));
-        gap: 1rem;
-    }
-    @media (max-width: 1200px) {
-        .metric-row {
-            grid-template-columns: repeat(2, minmax(0, 1fr));
-        }
-    }
-    @media (max-width: 768px) {
-        .metric-row {
-            grid-template-columns: minmax(0, 1fr);
-        }
-    }
+/* Hover = Cyan highlight */
+section[data-testid="stSidebar"] .stButton > button:hover {
+    background: linear-gradient(135deg, #1e293b, #0f172a);
+    border-color: #38bdf8;
+    box-shadow: 0 0 0 2px rgba(56,189,248,.6);
+    transform: translateY(-2px);
+}
 
-    .metric-card {
-        border-radius: 1.35rem;
-        padding: 1.1rem 1.2rem;
-        background: radial-gradient(circle at top left, rgba(15, 23, 42, 0.9) 0, rgba(15, 23, 42, 0.65) 40%, rgba(15, 23, 42, 0.9) 100%);
-        border: 1px solid rgba(148, 163, 184, 0.4);
-        box-shadow: 0 18px 40px rgba(15, 23, 42, 0.9);
-        position: relative;
-        overflow: hidden;
-        transition: transform 150ms ease-out, box-shadow 150ms ease-out, border-color 150ms ease-out;
-    }
-    .metric-card:hover {
-        transform: translateY(-3px) translateZ(0);
-        box-shadow: 0 24px 50px rgba(15, 23, 42, 0.95);
-        border-color: rgba(96, 165, 250, 0.85);
-    }
-    .metric-label {
-        font-size: 0.78rem;
-        letter-spacing: .12em;
-        text-transform: uppercase;
-        opacity: 0.7;
-        margin-bottom: 0.3rem;
-    }
-    .metric-value {
-        font-size: 1.6rem;
-        font-weight: 800;
-        line-height: 1.1;
-    }
-    .metric-tag {
-        margin-top: 0.4rem;
-        font-size: 0.78rem;
-        opacity: 0.8;
-    }
+/* Active (clicked) = Orange highlight */
+section[data-testid="stSidebar"] .stButton > button:active,
+section[data-testid="stSidebar"] .stButton > button:focus-visible {
+    background: linear-gradient(135deg, #fb923c, #f97316);
+    border-color: #fdba74;
+    color: #0f172a !important;
+    box-shadow: 0 0 0 2px rgba(251,146,60,.75);
+    transform: translateY(0px);
+}
 
-    /* Section headings */
-    .section-heading {
-        margin-top: 2rem;
-        margin-bottom: 0.5rem;
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        font-size: 1.2rem;
-        font-weight: 700;
-    }
-    .section-heading span.icon {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        width: 26px;
-        height: 26px;
-        border-radius: 999px;
-        background: radial-gradient(circle at 30% 0, #22d3ee 0, #1d4ed8 40%, #020617 100%);
-        box-shadow: 0 10px 25px rgba(15, 23, 42, 0.9);
-        font-size: 0.9rem;
-    }
-    .section-heading-sub {
-        font-size: 0.82rem;
-        opacity: 0.7;
-        margin-bottom: 0.7rem;
-    }
+/* ================= MAIN BUTTONS ================= */
+.block-container .stButton > button {
+    border-radius: 999px;
+    padding: .45rem 1.1rem;
 
-    /* Tables */
-    .stDataFrame {
-        border-radius: 12px;
-        overflow: hidden;
-        box-shadow: 0 16px 35px rgba(15, 23, 42, 0.85);
-    }
+    background: linear-gradient(135deg, #1f2937, #0f172a);
+    border: 1px solid rgba(148,163,184,0.55);
+    color: #f8fafc;
 
-    </style>
-    """,
+    transition: all .18s ease-in-out;
+}
+
+/* Hover = Purple glow */
+.block-container .stButton > button:hover {
+    background: linear-gradient(135deg, #312e81, #1e1b4b);
+    border-color: #a855f7;
+    box-shadow: 0 0 0 2px rgba(168,85,247,.6);
+    transform: translateY(-2px);
+}
+
+/* Active = Teal highlight */
+.block-container .stButton > button:active,
+.block-container .stButton > button:focus-visible {
+    background: linear-gradient(135deg, #14b8a6, #0d9488);
+    color: #022c22 !important;
+    border-color: #5eead4;
+    box-shadow: 0 0 0 2px rgba(45,212,191,.7);
+    transform: translateY(0px);
+}
+
+/* ================= HERO CARD ================= */
+.hero-card {
+    border-radius: 1.75rem;
+    padding: 1.6rem 2.1rem;
+    margin-top: .5rem;
+    color: #f8fafc;
+
+    background: radial-gradient(circle at top left, #0ea5e9 0, #1d4ed8 40%, #020617 100%);
+    box-shadow: 0 25px 45px rgba(0,0,0,0.6);
+}
+
+/* ================= METRIC CARDS ================= */
+.metric-card {
+    border-radius: 1.35rem;
+    padding: 1.2rem 1.3rem;
+
+    background: radial-gradient(circle at top left, #0f172a 0, #1e293b 55%, #0f172a 100%);
+    border: 1px solid rgba(148,163,184,0.35);
+
+    transition: 0.2s ease;
+}
+.metric-card:hover {
+    transform: translateY(-4px);
+    border-color: #60a5fa;
+    box-shadow: 0 18px 45px rgba(0,0,0,0.55);
+}
+
+</style>
+""",
     unsafe_allow_html=True,
 )
+
 
 # ----------------------------
 # 3. Header (hero card)
