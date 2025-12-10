@@ -1,5 +1,5 @@
 import streamlit as st
-import sqlite3
+import mysql.connector
 import pandas as pd
 from datetime import datetime
 import plotly.express as px
@@ -438,7 +438,7 @@ st.code("""
 !pip install streamlit plotly
 
 # Step 3: Launch the app
-!streamlit run nasa_project.py & npx localtunnel --port 8501
+!streamlit run Nasa_Neo script.py & npx localtunnel --port 8501
 """, language="bash")
 
 st.markdown("""
