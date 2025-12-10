@@ -16,138 +16,283 @@ st.set_page_config(
 )
 
 # ----------------------------
-# 2. Modern Custom CSS
+# 2. Modern Custom CSS (with improved button colours)
 # ----------------------------
 st.markdown(
     """
-<style>
+    <style>
+    /* Global background + typography */
+    .main {
+        background: radial-gradient(circle at top left, #0f172a 0, #020617 45%, #000000 100%);
+        color: #e5e7eb;
+        font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
 
-/* ================= GLOBAL ================= */
-.main {
-    background: radial-gradient(circle at top left, #0f172a 0, #020617 45%, #000000 100%);
-    color: #e5e7eb;
-    font-family: "Inter", system-ui, sans-serif;
-}
-.block-container {
-    padding-top: 1.5rem;
-    padding-bottom: 3rem;
-    padding-left: 2.5rem;
-    padding-right: 2.5rem;
-}
+    .block-container {
+        padding-top: 1.5rem;
+        padding-bottom: 3rem;
+        padding-left: 2.5rem;
+        padding-right: 2.5rem;
+    }
 
-/* ================= SIDEBAR ================= */
-section[data-testid="stSidebar"] {
-    background: rgba(15, 23, 42, 0.94);
-    border-right: 1px solid rgba(148, 163, 184, 0.25);
-    backdrop-filter: blur(18px);
-}
-.sidebar-header { padding-bottom: 0.5rem; }
-.sidebar-title {
-    font-weight: 700; font-size: 1.1rem;
-    display: flex; align-items: center; gap: 0.5rem;
-}
-.sidebar-subtitle {
-    font-size: .78rem; opacity: .75;
-    margin-bottom: .8rem;
-}
+    /* Sidebar styling */
+    section[data-testid="stSidebar"] {
+        background: rgba(15, 23, 42, 0.94);
+        backdrop-filter: blur(18px);
+        border-right: 1px solid rgba(148, 163, 184, 0.25);
+        color: #e5e7eb;
+    }
+    section[data-testid="stSidebar"] .sidebar-content {
+        padding-top: 1.2rem;
+    }
 
-/* ================= SIDEBAR BUTTONS ================= */
-/* Default button */
-section[data-testid="stSidebar"] .stButton > button {
-    width: 100%;
-    border-radius: 999px;
-    padding: .45rem .8rem;
-    font-size: .84rem; font-weight: 500;
-    text-align: left;
+    .sidebar-header {
+        padding-bottom: 0.5rem;
+    }
+    .sidebar-title {
+        font-weight: 700;
+        font-size: 1.1rem;
+        letter-spacing: .03em;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-bottom: 0.3rem;
+    }
+    .sidebar-subtitle {
+        font-size: 0.78rem;
+        opacity: 0.75;
+        margin-bottom: 0.8rem;
+    }
+    .sidebar-category-label {
+        font-size: 0.82rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: .08em;
+        opacity: 0.75;
+        margin-top: 0.3rem;
+        margin-bottom: 0.3rem;
+    }
 
-    background: linear-gradient(135deg, #111827, #0f172a);
-    border: 1px solid rgba(148,163,184,0.55);
-    color: #f1f5f9;
+    /* Expander tweaks */
+    details > summary {
+        font-weight: 600;
+        letter-spacing: .04em;
+    }
 
-    box-shadow: 0 8px 15px rgba(0,0,0,0.4);
-    transition: all .18s ease-in-out;
-}
+    /* -------- Sidebar query buttons: default / hover / active -------- */
+    /* Default state */
+    section[data-testid="stSidebar"] .stButton > button {
+        width: 100%;
+        border-radius: 999px;
+        border: 1px solid rgba(148, 163, 184, 0.7);
+        background: linear-gradient(135deg, #111827, #020617);
+        color: #f9fafb;
+        font-size: 0.84rem;
+        font-weight: 500;
+        padding: 0.45rem 0.8rem;
+        text-align: left;
+        box-shadow: 0 10px 20px rgba(15, 23, 42, 0.8);
+        transition:
+            background 120ms ease-out,
+            border-color 120ms ease-out,
+            box-shadow 120ms ease-out,
+            transform 120ms ease-out;
+    }
 
-/* Hover = Cyan highlight */
-section[data-testid="stSidebar"] .stButton > button:hover {
-    background: linear-gradient(135deg, #1e293b, #0f172a);
-    border-color: #38bdf8;
-    box-shadow: 0 0 0 2px rgba(56,189,248,.6);
-    transform: translateY(-2px);
-}
+    /* Hover state – cyan accent */
+    section[data-testid="stSidebar"] .stButton > button:hover {
+        background: radial-gradient(circle at top left, #1e293b 0, #020617 80%);
+        border-color: #38bdf8;
+        box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.60);
+        transform: translateY(-1px);
+    }
 
-/* Active (clicked) = Orange highlight */
-section[data-testid="stSidebar"] .stButton > button:active,
-section[data-testid="stSidebar"] .stButton > button:focus-visible {
-    background: linear-gradient(135deg, #fb923c, #f97316);
-    border-color: #fdba74;
-    color: #0f172a !important;
-    box-shadow: 0 0 0 2px rgba(251,146,60,.75);
-    transform: translateY(0px);
-}
+    /* Active / pressed state – orange accent */
+    section[data-testid="stSidebar"] .stButton > button:active,
+    section[data-testid="stSidebar"] .stButton > button:focus-visible {
+        background: linear-gradient(135deg, #fb923c, #f97316);
+        border-color: #fed7aa;
+        color: #0f172a !important;
+        box-shadow: 0 0 0 2px rgba(251, 146, 60, 0.85);
+        outline: none;
+        transform: translateY(0px);
+    }
 
-/* ================= MAIN BUTTONS ================= */
-.block-container .stButton > button {
-    border-radius: 999px;
-    padding: .45rem 1.1rem;
+    /* -------- Main content buttons (if you add any later) -------- */
+    .block-container .stButton > button {
+        border-radius: 999px;
+        border: 1px solid rgba(148, 163, 184, 0.6);
+        background: linear-gradient(135deg, #111827, #020617);
+        color: #f9fafb;
+        font-size: 0.86rem;
+        font-weight: 500;
+        padding: 0.45rem 1.1rem;
+        box-shadow: 0 10px 22px rgba(15, 23, 42, 0.8);
+        transition:
+            background 120ms ease-out,
+            border-color 120ms ease-out,
+            box-shadow 120ms ease-out,
+            transform 120ms ease-out;
+    }
 
-    background: linear-gradient(135deg, #1f2937, #0f172a);
-    border: 1px solid rgba(148,163,184,0.55);
-    color: #f8fafc;
+    .block-container .stButton > button:hover {
+        background: radial-gradient(circle at top left, #312e81 0, #020617 85%);
+        border-color: #a855f7;
+        box-shadow: 0 0 0 2px rgba(168, 85, 247, 0.70);
+        transform: translateY(-1px);
+    }
 
-    transition: all .18s ease-in-out;
-}
+    .block-container .stButton > button:active,
+    .block-container .stButton > button:focus-visible {
+        background: linear-gradient(135deg, #14b8a6, #0d9488);
+        border-color: #99f6e4;
+        color: #022c22 !important;
+        box-shadow: 0 0 0 2px rgba(45, 212, 191, 0.80);
+        outline: none;
+        transform: translateY(0px);
+    }
 
-/* Hover = Purple glow */
-.block-container .stButton > button:hover {
-    background: linear-gradient(135deg, #312e81, #1e1b4b);
-    border-color: #a855f7;
-    box-shadow: 0 0 0 2px rgba(168,85,247,.6);
-    transform: translateY(-2px);
-}
+    /* Hero banner */
+    .hero-card {
+        margin-top: 0.5rem;
+        border-radius: 1.75rem;
+        padding: 1.6rem 2.1rem;
+        background: radial-gradient(circle at top left, #0ea5e9 0, #1d4ed8 40%, #020617 100%);
+        box-shadow:
+            0 22px 45px rgba(15, 23, 42, 0.9),
+            0 0 0 1px rgba(148, 163, 184, 0.25);
+        position: relative;
+        overflow: hidden;
+        color: #f9fafb;
+    }
+    .hero-card::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background-image:
+            radial-gradient(circle at 10% 0%, rgba(248, 250, 252, 0.18) 0, transparent 40%),
+            radial-gradient(circle at 90% 100%, rgba(52, 211, 153, 0.16) 0, transparent 55%);
+        opacity: 0.85;
+        pointer-events: none;
+    }
+    .hero-inner {
+        position: relative;
+        z-index: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 0.35rem;
+    }
+    .hero-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        border-radius: 999px;
+        padding: 0.18rem 0.7rem;
+        font-size: 0.75rem;
+        background: rgba(15, 23, 42, 0.35);
+        border: 1px solid rgba(226, 232, 240, 0.25);
+        width: fit-content;
+    }
+    .hero-title {
+        font-size: clamp(1.8rem, 2.1vw, 2.3rem);
+        font-weight: 800;
+        letter-spacing: .04em;
+    }
+    .hero-subtitle {
+        font-size: 0.95rem;
+        opacity: 0.9;
+        max-width: 720px;
+    }
 
-/* Active = Teal highlight */
-.block-container .stButton > button:active,
-.block-container .stButton > button:focus-visible {
-    background: linear-gradient(135deg, #14b8a6, #0d9488);
-    color: #022c22 !important;
-    border-color: #5eead4;
-    box-shadow: 0 0 0 2px rgba(45,212,191,.7);
-    transform: translateY(0px);
-}
+    /* Metric cards */
+    .metric-row {
+        margin-top: 1.3rem;
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 1rem;
+    }
+    @media (max-width: 1200px) {
+        .metric-row {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+    }
+    @media (max-width: 768px) {
+        .metric-row {
+            grid-template-columns: minmax(0, 1fr);
+        }
+    }
 
-/* ================= HERO CARD ================= */
-.hero-card {
-    border-radius: 1.75rem;
-    padding: 1.6rem 2.1rem;
-    margin-top: .5rem;
-    color: #f8fafc;
+    .metric-card {
+        border-radius: 1.35rem;
+        padding: 1.1rem 1.2rem;
+        background: radial-gradient(circle at top left, rgba(15, 23, 42, 0.9) 0, rgba(15, 23, 42, 0.65) 40%, rgba(15, 23, 42, 0.9) 100%);
+        border: 1px solid rgba(148, 163, 184, 0.4);
+        box-shadow: 0 18px 40px rgba(15, 23, 42, 0.9);
+        position: relative;
+        overflow: hidden;
+        transition: transform 150ms ease-out, box-shadow 150ms ease-out, border-color 150ms ease-out;
+    }
+    .metric-card:hover {
+        transform: translateY(-3px) translateZ(0);
+        box-shadow: 0 24px 50px rgba(15, 23, 42, 0.95);
+        border-color: rgba(96, 165, 250, 0.85);
+    }
+    .metric-label {
+        font-size: 0.78rem;
+        letter-spacing: .12em;
+        text-transform: uppercase;
+        opacity: 0.7;
+        margin-bottom: 0.3rem;
+    }
+    .metric-value {
+        font-size: 1.6rem;
+        font-weight: 800;
+        line-height: 1.1;
+    }
+    .metric-tag {
+        margin-top: 0.4rem;
+        font-size: 0.78rem;
+        opacity: 0.8;
+    }
 
-    background: radial-gradient(circle at top left, #0ea5e9 0, #1d4ed8 40%, #020617 100%);
-    box-shadow: 0 25px 45px rgba(0,0,0,0.6);
-}
+    /* Section headings */
+    .section-heading {
+        margin-top: 2rem;
+        margin-bottom: 0.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 1.2rem;
+        font-weight: 700;
+    }
+    .section-heading span.icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 26px;
+        height: 26px;
+        border-radius: 999px;
+        background: radial-gradient(circle at 30% 0, #22d3ee 0, #1d4ed8 40%, #020617 100%);
+        box-shadow: 0 10px 25px rgba(15, 23, 42, 0.9);
+        font-size: 0.9rem;
+    }
+    .section-heading-sub {
+        font-size: 0.82rem;
+        opacity: 0.7;
+        margin-bottom: 0.7rem;
+    }
 
-/* ================= METRIC CARDS ================= */
-.metric-card {
-    border-radius: 1.35rem;
-    padding: 1.2rem 1.3rem;
+    /* Tables */
+    .stDataFrame {
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 16px 35px rgba(15, 23, 42, 0.85);
+    }
 
-    background: radial-gradient(circle at top left, #0f172a 0, #1e293b 55%, #0f172a 100%);
-    border: 1px solid rgba(148,163,184,0.35);
-
-    transition: 0.2s ease;
-}
-.metric-card:hover {
-    transform: translateY(-4px);
-    border-color: #60a5fa;
-    box-shadow: 0 18px 45px rgba(0,0,0,0.55);
-}
-
-</style>
-""",
+    </style>
+    """,
     unsafe_allow_html=True,
 )
-
 
 # ----------------------------
 # 3. Header (hero card)
@@ -482,181 +627,4 @@ with st.sidebar:
 query_categories = {
     "📈 Statistical Analysis": [
         "1. Count asteroid approaches",
-        "2. Average velocity per asteroid",
-        "3. Top 10 fastest asteroids",
-        "11. Approaches per month",
-    ],
-    "⚠️ Hazard Assessment": [
-        "4. Hazardous asteroids > 3 approaches",
-        "13. Hazardous vs Non-hazardous count",
-        "Bonus 4: Count of hazardous asteroids",
-        "Bonus 2: Avg miss distance by hazard type",
-    ],
-    "🏃‍♂️ Speed & Motion": [
-        "6. Fastest ever approach",
-        "10. Velocity > 50,000 km/h",
-    ],
-    "📏 Distance & Size": [
-        "7. Sort by max estimated diameter",
-        "9. Closest approach date & distance",
-        "14. Asteroids < 1 LD",
-        "15. Asteroids < 0.05 AU",
-        "Bonus 3: Top 5 closest approaches",
-    ],
-    "📅 Temporal Analysis": [
-        "5. Month with most approaches",
-        "8. Closest approach getting nearer over time",
-    ],
-    "🌟 Special Queries": [
-        "12. Brightest asteroid (lowest magnitude)",
-        "Bonus 1: Orbiting bodies (non-Earth)",
-        "Bonus 5: Frequent <1 LD asteroids",
-    ],
-}
-
-selected_query = None
-for category, queries_list in query_categories.items():
-    with st.sidebar.expander(category):
-        for query_label in queries_list:
-            if st.button(query_label, key=f"btn_{query_label}"):
-                selected_query = query_label
-
-if selected_query is None:
-    selected_query = "1. Count asteroid approaches"
-
-# ----------------------------
-# 9. Show selected query (section style)
-# ----------------------------
-st.markdown(
-    f"""
-    <div class="section-heading">
-      <span class="icon">🔍</span>
-      <span>{selected_query}</span>
-    </div>
-    <div class="section-heading-sub">
-      Results and visualizations for the selected NEO query.
-    </div>
-    """,
-    unsafe_allow_html=True,
-)
-
-show_query(queries[selected_query])
-
-# ----------------------------
-# 10. Advanced Filters (modern section heading)
-# ----------------------------
-st.markdown(
-    """
-    <div class="section-heading">
-      <span class="icon">🎛️</span>
-      <span>Advanced Asteroid Approach Filters</span>
-    </div>
-    <div class="section-heading-sub">
-      Customize your search parameters to find specific asteroid approaches.
-    </div>
-    """,
-    unsafe_allow_html=True,
-)
-
-col1, col2 = st.columns(2)
-
-with col1:
-    st.subheader("📅 Date & Time Filters")
-    selected_date = st.date_input("Select Close Approach Date (after)", datetime(2024, 1, 1))
-    st.info("📊 Data Range: January 1, 2024 - December 31, 2024")
-
-    st.subheader("🚀 Velocity Filters")
-    min_velocity = st.slider("Minimum Relative Velocity (km/h)", 0.0, 100000.0, 0.0, 1000.0)
-    max_velocity = st.slider("Maximum Relative Velocity (km/h)", 0.0, 100000.0, 50000.0, 1000.0)
-
-    st.subheader("📏 Size Filters")
-    min_diameter = st.slider("Minimum Estimated Diameter (km)", 0.0, 50.0, 0.0, 0.1)
-    max_diameter = st.slider("Maximum Estimated Diameter (km)", 0.0, 50.0, 5.0, 0.1)
-
-with col2:
-    st.subheader("🌍 Distance Filters (Astronomical Units)")
-    min_au = st.slider("Minimum AU", 0.0, 1.0, 0.0, 0.01)
-    max_au = st.slider("Maximum AU", 0.0, 1.0, 0.05, 0.01)
-
-    st.subheader("🌙 Distance Filters (Lunar Distance)")
-    min_ld = st.slider("Minimum LD", 0.0, 100.0, 0.0, 1.0)
-    max_ld = st.slider("Maximum LD", 0.0, 100.0, 10.0, 1.0)
-
-    st.subheader("⚠️ Hazard Classification")
-    hazardous = st.selectbox("Potentially Hazardous?", ["Both", "Yes", "No"])
-
-filter_query = f"""
-SELECT a.name,
-       ca.close_approach_date,
-       ca.relative_velocity_km_per_hour,
-       ca.miss_distance_km,
-       ca.miss_distance_lunar,
-       a.estimated_diameter_min_km,
-       a.estimated_diameter_max_km,
-       a.is_potentially_hazardous_asteroid
-FROM close_approach ca
-JOIN asteroids a ON ca.neo_reference_id = a.id
-WHERE DATE(ca.close_approach_date) >= DATE('{selected_date}')
-  AND ca.astronomical BETWEEN {min_au} AND {max_au}
-  AND ca.miss_distance_lunar BETWEEN {min_ld} AND {max_ld}
-  AND ca.relative_velocity_km_per_hour BETWEEN {min_velocity} AND {max_velocity}
-  AND a.estimated_diameter_max_km BETWEEN {min_diameter} AND {max_diameter}
-"""
-
-if hazardous == "Yes":
-    filter_query += " AND a.is_potentially_hazardous_asteroid = 1"
-elif hazardous == "No":
-    filter_query += " AND a.is_potentially_hazardous_asteroid = 0"
-
-st.markdown("#### 🎯 Filtered Results")
-filtered_df = show_query(filter_query, show_chart=False)
-
-if not filtered_df.empty:
-    st.success(f"✅ Found {len(filtered_df)} asteroids matching your criteria")
-else:
-    st.warning("🔍 No asteroids found matching your criteria. Try adjusting the filters.")
-
-# ----------------------------
-# 11. Colab launch instructions
-# ----------------------------
-st.markdown(
-    """
-    ---
-    <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-                padding: 2rem; border-radius: 10px; color: white; margin-top: 2rem;">
-        <h2>🚀 Launch Instructions for Google Colab</h2>
-        <p>Follow these steps to run this dashboard in Google Colab:</p>
-    </div>
-    """,
-    unsafe_allow_html=True,
-)
-
-st.code(
-    """
-# Step 1: Get your external IP (this will be your password)
-!wget -q -O - ipv4.icanhazip.com
-
-# Step 2: Install required packages (if not already installed)
-!pip install streamlit plotly mysql-connector-python
-
-# Step 3: Launch the app
-!streamlit run "Nasa_Neo script.py" & npx localtunnel --port 8501
-""",
-    language="bash",
-)
-
-st.markdown(
-    """
-**📋 Then follow these steps:**
-1. ✅ Enter `y` when prompted to proceed  
-2. 🔗 Copy the generated link (e.g., `https://fruity-aliens-unite.loca.lt/`)  
-3. 🌐 Paste it in your browser  
-4. 🔑 Enter the IP address from Step 1 as the password  
-5. 🎉 You'll be redirected to your enhanced Streamlit app!
-
-**💡 Pro Tips:**
-- Ensure your database is reachable from Colab and credentials are in `st.secrets`  
-- The dashboard works best with a stable internet connection  
-- Use the interactive filters to explore different aspects of asteroid data  
-"""
-)
+        "2. Av
