@@ -88,22 +88,22 @@ try:
         return conn
 
     def run_query(sql, params=None):
-    conn = None
-    cursor = None
-    try:
-        conn = get_connection()
-        cursor = conn.cursor(dictionary=True)
-        cursor.execute(sql, params or ())
-        result = cursor.fetchall()
-        return result
-    except Exception as e:
-        st.error(f"Database connection failed: {e}")
-        return []
-    finally:
-        if cursor:
-            cursor.close()
-        if conn:
-            conn.close()
+        conn = None
+        cursor = None
+        try:
+            conn = get_connection()
+            cursor = conn.cursor(dictionary=True)
+            cursor.execute(sql, params or ())
+            result = cursor.fetchall()
+            return result
+        except Exception as e:
+            st.error(f"Database connection failed: {e}")
+            return []
+        finally:
+            if cursor:
+                cursor.close()
+            if conn:
+                conn.close()
 
     if __name__ == "__main__":
         main()
