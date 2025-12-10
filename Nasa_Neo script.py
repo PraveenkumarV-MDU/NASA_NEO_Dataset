@@ -77,8 +77,29 @@ st.markdown("""
 
 # Connect to the database
 try:
-    conn = sqlite3.connect("Asteroid_Data.db")
-    cursor = conn.cursor()
+    def get_connection():
+        conn = mysql.connector.connect(
+            host=st.secrets["db_host"],
+            user=st.secrets["db_user"],
+            password=st.secrets["db_password"],
+            database=st.secrets["db_name"],
+            port=st.secrets.get("db_port", 3306),
+        )
+        return conn
+    
+    def main():    
+        conn = get_connection()
+        cursor = conn.cursor()
+        cursor.execute("SELECT VERSION()")
+        version = cursor.fetchone()
+        st.write("Connected to MySQL version:", version[0])
+    
+        cursor.close()
+        conn.close()
+    
+    if __name__ == "__main__":
+        main()
+
     
     # Get database stats for overview
     total_asteroids = pd.read_sql_query("SELECT COUNT(DISTINCT id) as count FROM asteroids", conn).iloc[0]['count']
