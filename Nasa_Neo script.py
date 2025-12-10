@@ -442,7 +442,7 @@ if 'conn' in locals():
     else:
         st.warning("🔍 No asteroids found matching your criteria. Try adjusting the filters.")
 
-# Enhanced launch instructions
+"""# Enhanced launch instructions
 st.markdown("""
 ---
 <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 2rem; border-radius: 10px; color: white;">
@@ -478,4 +478,4 @@ st.markdown("""
 
 # Close database connection
 if 'conn' in locals():
-    conn.close()
+    conn.close()"""
