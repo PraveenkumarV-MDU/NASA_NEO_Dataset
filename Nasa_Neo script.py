@@ -105,9 +105,6 @@ try:
             if conn:
                 conn.close()
 
-    if __name__ == "__main__":
-        main()
-
     
     # Get database stats for overview
     total_asteroids = pd.read_sql_query("SELECT COUNT(DISTINCT id) as count FROM asteroids", conn).iloc[0]['count']
