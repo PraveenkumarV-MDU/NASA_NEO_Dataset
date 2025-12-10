@@ -442,7 +442,7 @@ if 'conn' in locals():
     else:
         st.warning("🔍 No asteroids found matching your criteria. Try adjusting the filters.")
 
-"""# Enhanced launch instructions
+# Enhanced launch instructions
 st.markdown("""
 ---
 <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 2rem; border-radius: 10px; color: white;">
@@ -451,7 +451,7 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-st.code("""
+"""st.code("""
 # Step 1: Get your external IP (this will be your password)
 !wget -q -O - ipv4.icanhazip.com
 
@@ -460,9 +460,9 @@ st.code("""
 
 # Step 3: Launch the app
 !streamlit run Nasa_Neo script.py & npx localtunnel --port 8501
-""", language="bash")
+""", language="bash")"""
 
-st.markdown("""
+"""st.markdown("""
 **📋 Then follow these steps:**
 1. ✅ Enter `y` when prompted to proceed
 2. 🔗 Copy the generated link (e.g., `https://fruity-aliens-unite.loca.lt/`)
