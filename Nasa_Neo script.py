@@ -1,3 +1,4 @@
+
 import streamlit as st
 import mysql.connector
 import pandas as pd
@@ -69,40 +70,6 @@ st.markdown("""
     }
 </style>
 """, unsafe_allow_html=True)
-# -------------------------------------------------------------------
-# Session state: selected query + filter defaults
-# -------------------------------------------------------------------
-if "selected_query" not in st.session_state:
-    st.session_state["selected_query"] = "1. Count asteroid approaches"
-
-# Velocity
-if "min_velocity" not in st.session_state:
-    st.session_state["min_velocity"] = 0.0
-if "max_velocity" not in st.session_state:
-    st.session_state["max_velocity"] = 100000.0
-
-# Diameter
-if "min_diameter" not in st.session_state:
-    st.session_state["min_diameter"] = 0.0
-if "max_diameter" not in st.session_state:
-    st.session_state["max_diameter"] = 5.0
-
-# Astronomical Units
-if "min_au" not in st.session_state:
-    st.session_state["min_au"] = 0.0
-if "max_au" not in st.session_state:
-    st.session_state["max_au"] = 0.05
-
-# Lunar Distance
-if "min_ld" not in st.session_state:
-    st.session_state["min_ld"] = 0.0
-if "max_ld" not in st.session_state:
-    st.session_state["max_ld"] = 10.0
-
-# Hazardous filter
-if "hazardous" not in st.session_state:
-    st.session_state["hazardous"] = "Both"
-
 
 # ----------------------------
 # 3. Header
@@ -260,14 +227,14 @@ queries = {
     ''',
 
     "2. Average velocity per asteroid": '''
-        SELECT neo_reference_id, AVG(relative_velocity_km_per_hour) AS avg_velocity
+        SELECT neo_reference_id, AVG(relative_velocity_kmph) AS avg_velocity
         FROM close_approach
         GROUP BY neo_reference_id
         ORDER BY avg_velocity DESC
     ''',
 
     "3. Top 10 fastest asteroids": '''
-        SELECT neo_reference_id, MAX(relative_velocity_km_per_hour) AS max_velocity
+        SELECT neo_reference_id, MAX(relative_velocity_kmph) AS max_velocity
         FROM close_approach
         GROUP BY neo_reference_id
         ORDER BY max_velocity DESC
@@ -293,7 +260,7 @@ queries = {
     ''',
 
     "6. Fastest ever approach": '''
-        SELECT neo_reference_id, MAX(relative_velocity_km_per_hour) AS fastest_speed
+        SELECT neo_reference_id, MAX(relative_velocity_kmph) AS fastest_speed
         FROM close_approach
         GROUP BY neo_reference_id
         ORDER BY fastest_speed DESC
@@ -323,10 +290,10 @@ queries = {
     ''',
 
     "10. Velocity > 50,000 km/h": '''
-        SELECT DISTINCT a.name, ca.relative_velocity_km_per_hour
+        SELECT DISTINCT a.name, ca.relative_velocity_kmph
         FROM close_approach ca
         JOIN asteroids a ON ca.neo_reference_id = a.id
-        WHERE ca.relative_velocity_km_per_hour > 50000
+        WHERE ca.relative_velocity_kmph > 50000
     ''',
 
     "11. Approaches per month": '''
@@ -455,27 +422,15 @@ query_categories = {
     ]
 }
 
-# When a button is clicked, set selected_query AND adjust sliders
+selected_query = None
 for category, queries_list in query_categories.items():
     with st.sidebar.expander(category):
         for query_label in queries_list:
             if st.button(query_label, key=f"btn_{query_label}"):
-                st.session_state["selected_query"] = query_label
+                selected_query = query_label
 
-                # OPTIONAL: set slider defaults depending on query
-                if query_label == "10. Velocity > 50,000 km/h":
-                    st.session_state["min_velocity"] = 50000.0
-                    st.session_state["max_velocity"] = 100000.0
-                elif query_label == "14. Asteroids < 1 LD":
-                    st.session_state["min_ld"] = 0.0
-                    st.session_state["max_ld"] = 1.0
-                elif query_label == "15. Asteroids < 0.05 AU":
-                    st.session_state["min_au"] = 0.0
-                    st.session_state["max_au"] = 0.05
-                # you can add more special cases if you want
-
-# Use the stored selection
-selected_query = st.session_state["selected_query"]
+if selected_query is None:
+    selected_query = "1. Count asteroid approaches"
 
 # ----------------------------
 # 9. Show selected query
@@ -502,68 +457,59 @@ col1, col2 = st.columns(2)
 
 with col1:
     st.subheader("📅 Date & Time Filters")
-    selected_date = st.date_input(
-        "Select Close Approach Date (after)",
-        datetime(2024, 1, 1)
-    )
+    selected_date = st.date_input("Select Close Approach Date (after)", datetime(2024, 1, 1))
     st.info("📊 Data Range: January 1, 2024 - December 31, 2024")
-
+    
     st.subheader("🚀 Velocity Filters")
-    min_velocity = st.slider(
-        "Minimum Relative Velocity (km/h)",
-        0.0, 100000.0,
-        key="min_velocity"
-    )
-    max_velocity = st.slider(
-        "Maximum Relative Velocity (km/h)",
-        0.0, 100000.0,
-        key="max_velocity"
-    )
-
+    min_velocity = st.slider("Minimum Relative Velocity (km/h)", 0.0, 100000.0, 0.0, 1000.0)
+    max_velocity = st.slider("Maximum Relative Velocity (km/h)", 0.0, 100000.0, 50000.0, 1000.0)
+    
     st.subheader("📏 Size Filters")
-    min_diameter = st.slider(
-        "Minimum Estimated Diameter (km)",
-        0.0, 50.0,
-        key="min_diameter"
-    )
-    max_diameter = st.slider(
-        "Maximum Estimated Diameter (km)",
-        0.0, 50.0,
-        key="max_diameter"
-    )
+    min_diameter = st.slider("Minimum Estimated Diameter (km)", 0.0, 50.0, 0.0, 0.1)
+    max_diameter = st.slider("Maximum Estimated Diameter (km)", 0.0, 50.0, 5.0, 0.1)
 
 with col2:
     st.subheader("🌍 Distance Filters (Astronomical Units)")
-    min_au = st.slider(
-        "Minimum AU",
-        0.0, 1.0,
-        key="min_au"
-    )
-    max_au = st.slider(
-        "Maximum AU",
-        0.0, 1.0,
-        key="max_au"
-    )
-
+    min_au = st.slider("Minimum AU", 0.0, 1.0, 0.0, 0.01)
+    max_au = st.slider("Maximum AU", 0.0, 1.0, 0.05, 0.01)
+    
     st.subheader("🌙 Distance Filters (Lunar Distance)")
-    min_ld = st.slider(
-        "Minimum LD",
-        0.0, 100.0,
-        key="min_ld"
-    )
-    max_ld = st.slider(
-        "Maximum LD",
-        0.0, 100.0,
-        key="max_ld"
-    )
-
+    min_ld = st.slider("Minimum LD", 0.0, 100.0, 0.0, 1.0)
+    max_ld = st.slider("Maximum LD", 0.0, 100.0, 10.0, 1.0)
+    
     st.subheader("⚠️ Hazard Classification")
-    hazardous = st.selectbox(
-        "Potentially Hazardous?",
-        ["Both", "Yes", "No"],
-        key="hazardous"
-    )
+    hazardous = st.selectbox("Potentially Hazardous?", ["Both", "Yes", "No"])
 
+filter_query = f"""
+SELECT a.name,
+       ca.close_approach_date,
+       ca.relative_velocity_kmph,
+       ca.miss_distance_km,
+       ca.miss_distance_lunar,
+       a.estimated_diameter_min_km,
+       a.estimated_diameter_max_km,
+       a.is_potentially_hazardous_asteroid
+FROM close_approach ca
+JOIN asteroids a ON ca.neo_reference_id = a.id
+WHERE DATE(ca.close_approach_date) >= DATE('{selected_date}')
+  AND ca.astronomical BETWEEN {min_au} AND {max_au}
+  AND ca.miss_distance_lunar BETWEEN {min_ld} AND {max_ld}
+  AND ca.relative_velocity_kmph BETWEEN {min_velocity} AND {max_velocity}
+  AND a.estimated_diameter_max_km BETWEEN {min_diameter} AND {max_diameter}
+"""
+
+if hazardous == "Yes":
+    filter_query += " AND a.is_potentially_hazardous_asteroid = 1"
+elif hazardous == "No":
+    filter_query += " AND a.is_potentially_hazardous_asteroid = 0"
+
+st.markdown("### 🎯 Filtered Results")
+filtered_df = show_query(filter_query, show_chart=False)
+
+if not filtered_df.empty:
+    st.success(f"✅ Found {len(filtered_df)} asteroids matching your criteria")
+else:
+    st.warning("🔍 No asteroids found matching your criteria. Try adjusting the filters.")
 
 # ----------------------------
 # 11. Colab launch instructions
