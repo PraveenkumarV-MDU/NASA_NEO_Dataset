@@ -86,17 +86,25 @@ try:
             port=st.secrets.get("port", 4000),
         )
         return conn
-    
-    def main():    
+
+    def run_query(sql, params=None):
+    conn = None
+    cursor = None
+    try:
         conn = get_connection()
-        cursor = conn.cursor()
-        cursor.execute("SELECT VERSION()")
-        version = cursor.fetchone()
-        st.write("Connected to MySQL version:", version[0])
-    
-        cursor.close()
-        conn.close()
-    
+        cursor = conn.cursor(dictionary=True)
+        cursor.execute(sql, params or ())
+        result = cursor.fetchall()
+        return result
+    except Exception as e:
+        st.error(f"Database connection failed: {e}")
+        return []
+    finally:
+        if cursor:
+            cursor.close()
+        if conn:
+            conn.close()
+
     if __name__ == "__main__":
         main()
 
