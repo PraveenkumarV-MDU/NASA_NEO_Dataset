@@ -451,7 +451,7 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-"""st.code("""
+st.code("""
 # Step 1: Get your external IP (this will be your password)
 !wget -q -O - ipv4.icanhazip.com
 
@@ -460,9 +460,9 @@ st.markdown("""
 
 # Step 3: Launch the app
 !streamlit run Nasa_Neo script.py & npx localtunnel --port 8501
-""", language="bash")"""
+""", language="bash")
 
-"""st.markdown("""
+st.markdown("""
 **📋 Then follow these steps:**
 1. ✅ Enter `y` when prompted to proceed
 2. 🔗 Copy the generated link (e.g., `https://fruity-aliens-unite.loca.lt/`)
@@ -474,7 +474,7 @@ st.markdown("""
 - Ensure your `Asteroid_Data.db` file is in the same directory
 - The dashboard works best with a stable internet connection
 - Use the interactive filters to explore different aspects of asteroid data
-""")"""
+""")
 
 # Close database connection
 if 'conn' in locals():
