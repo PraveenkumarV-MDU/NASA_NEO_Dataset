@@ -121,8 +121,8 @@ def run_query(sql, params=None):
     
         # (Your metric UI code stays the same, just uses the three numbers above)
     except Exception as e:
-    st.error(f"⚠️ Database connection failed: {e}")
-    st.info("🔧 Please check your MySQL connection settings in st.secrets.")
+        st.error(f"⚠️ Database connection failed: {e}")
+        st.info("🔧 Please check your MySQL connection settings in st.secrets.")
     
     # Display key metrics at the top
     col1, col2, col3, col4 = st.columns(4)
@@ -159,10 +159,6 @@ def run_query(sql, params=None):
             <p>Hazard Rate</p>
         </div>
         """, unsafe_allow_html=True)
-    
-except Exception as e:
-    st.error(f"⚠️ Database connection failed: {e}")
-    st.info("🔧 Please ensure 'Asteroid_Data.db' is in the same directory as this script.")
 
 # Helper function to run and display SQL queries with enhanced visualization
 def show_query(sql, show_chart=True):
