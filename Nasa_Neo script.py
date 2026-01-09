@@ -395,13 +395,13 @@ def show_query(sql, show_chart=True):
 # 7. Query definitions
 # ----------------------------
 queries = {
-    "1. Count asteroid approaches": """
+    "1. Each  asteroid approach Count": """
         SELECT neo_reference_id, COUNT(*) AS approach_count
         FROM close_approach
         GROUP BY neo_reference_id
         ORDER BY approach_count DESC
     """,
-    "2. Average velocity per asteroid": """
+    "2. Avg_velocity of each": """
         SELECT neo_reference_id, AVG(relative_velocity_km_per_hour) AS avg_velocity
         FROM close_approach
         GROUP BY neo_reference_id
@@ -414,7 +414,7 @@ queries = {
         ORDER BY max_velocity DESC
         LIMIT 10
     """,
-    "4. Hazardous asteroids > 3 approaches": """
+    "4. Hazardous>3 approach": """
         SELECT ca.neo_reference_id, COUNT(*) AS approach_count
         FROM close_approach ca
         JOIN asteroids a ON ca.neo_reference_id = a.id
@@ -422,31 +422,31 @@ queries = {
         GROUP BY ca.neo_reference_id
         HAVING COUNT(*) > 3
     """,
-    "5. Month with most approaches": """
+    "5. Most approached month": """
         SELECT DATE_FORMAT(close_approach_date, '%Y-%m') AS month, COUNT(*) AS count
         FROM close_approach
         GROUP BY month
         ORDER BY count DESC
         LIMIT 1
     """,
-    "6. Fastest ever approach": """
+    "6. Fastest approach": """
         SELECT neo_reference_id, MAX(relative_velocity_km_per_hour) AS fastest_speed
         FROM close_approach
         GROUP BY neo_reference_id
         ORDER BY fastest_speed DESC
         LIMIT 1
     """,
-    "7. Sort by max estimated diameter": """
+    "7. Max estimated diameter order": """
         SELECT id, name, estimated_diameter_max_km
         FROM asteroids
         ORDER BY estimated_diameter_max_km DESC
     """,
-    "8. Closest approach getting nearer over time": """
+    "8. Order by Miss distance nearer": """
         SELECT *
         FROM close_approach
         ORDER BY neo_reference_id, close_approach_date
     """,
-    "9. Closest approach date & distance": """
+    "9. Closest approach date & miss distance": """
         SELECT a.name,
                ca.close_approach_date,
                MIN(ca.miss_distance_km) AS closest_approach
@@ -455,7 +455,7 @@ queries = {
         GROUP BY a.id, a.name, ca.close_approach_date
         ORDER BY closest_approach ASC
     """,
-    "10. Velocity > 50,000 km/h": """
+    "10. Asteroid > 50k km/h": """
         SELECT DISTINCT a.name, ca.relative_velocity_km_per_hour
         FROM close_approach ca
         JOIN asteroids a ON ca.neo_reference_id = a.id
@@ -467,7 +467,7 @@ queries = {
         GROUP BY month
         ORDER BY total DESC
     """,
-    "12. Brightest asteroid (lowest magnitude)": """
+    "12. Brightest asteroid": """
         SELECT id, name, absolute_magnitude_h
         FROM asteroids
         ORDER BY absolute_magnitude_h ASC
@@ -496,21 +496,65 @@ queries = {
         WHERE ca.astronomical < 0.05
         ORDER BY ca.astronomical
     """,
-    "Bonus 1: Orbiting bodies (non-Earth)": """
+    "16. Abs_mag range (20-26)": """
+        SELECT COUNT(*) AS asteroid_count
+        FROM asteroids
+        WHERE absolute_magnitude_h BETWEEN 20 AND 26;
+    """,
+    "17. Maximum asteroid diameter": """
+        SELECT
+        a.id,
+        a.name,
+        a.estimated_diameter_max_km,
+        ca.close_approach_date,
+        ca.miss_distance_km
+        FROM asteroids a
+        JOIN close_approach ca
+        ON a.id = ca.neo_reference_id
+        ORDER BY
+        a.estimated_diameter_max_km DESC, ca.close_approach_date ASC;
+    """,
+    "18. Minimum estimated diameter": """
+        SELECT
+        id,
+        name,
+        estimated_diameter_min_km
+        FROM asteroids
+        ORDER BY estimated_diameter_min_km DESC;
+    """,
+    "19. Close approach within last 3 days": """
+        SELECT
+        COUNT(*) AS approaches_last_3_days
+        FROM close_approach
+        WHERE close_approach_date >= CURDATE() - INTERVAL 3 DAY
+        AND close_approach_date <= CURDATE()
+        AND orbiting_body = 'Earth';
+    """,
+    "20. Miss_distance_lunar between 70 -120": """
+        SELECT 
+        neo_reference_id,
+        close_approach_date,
+        miss_distance_lunar,
+        miss_distance_km
+        FROM close_approach
+        WHERE miss_distance_lunar BETWEEN 70 AND 120
+        ORDER BY miss_distance_lunar ASC;
+    """,
+    "21. Orbiting bodies (non-Earth)": """
         SELECT orbiting_body, COUNT(*) AS count
         FROM close_approach
         WHERE orbiting_body != 'Earth'
         GROUP BY orbiting_body
         ORDER BY count DESC
     """,
-    "Bonus 2: Avg miss distance by hazard type": """
+    "22. Avg_miss_distance by hazard type": """
         SELECT a.is_potentially_hazardous_asteroid,
                AVG(ca.miss_distance_km) AS avg_miss_distance
         FROM close_approach ca
         JOIN asteroids a ON ca.neo_reference_id = a.id
         GROUP BY a.is_potentially_hazardous_asteroid
     """,
-    "Bonus 3: Top 5 closest approaches": """
+    "23. Top 5 closest approaches": """
         SELECT a.name,
                ca.close_approach_date,
                ca.miss_distance_km
@@ -519,12 +563,12 @@ queries = {
         ORDER BY ca.miss_distance_km ASC
         LIMIT 5
     """,
-    "Bonus 4: Count of hazardous asteroids": """
+    "24. Count of hazardous asteroids": """
         SELECT COUNT(DISTINCT id) AS hazardous_asteroid_count
         FROM asteroids
         WHERE is_potentially_hazardous_asteroid = 1
     """,
-    "Bonus 5: Frequent <1 LD asteroids": """
+    "25. Frequent <1 LD asteroids": """
         SELECT ca.neo_reference_id,
                a.name,
                COUNT(*) AS close_pass_count
@@ -554,36 +598,41 @@ with st.sidebar:
 
 query_categories = {
     "📈 Statistical Analysis": [
-        "1. Count asteroid approaches",
-        "2. Average velocity per asteroid",
+        "1. Each  asteroid approach Count",
+        "2. Avg_velocity of each",
         "3. Top 10 fastest asteroids",
         "11. Approaches per month",
+        "19. Close approach within last 3 days",
     ],
     "⚠️ Hazard Assessment": [
-        "4. Hazardous asteroids > 3 approaches",
+        "4. Hazardous>3 approach",
         "13. Hazardous vs Non-hazardous count",
-        "Bonus 4: Count of hazardous asteroids",
-        "Bonus 2: Avg miss distance by hazard type",
+        "24. Count of hazardous asteroids",
+        "22. Avg_miss_distance by hazard type",
     ],
     "🏃‍♂️ Speed & Motion": [
-        "6. Fastest ever approach",
-        "10. Velocity > 50,000 km/h",
+        "6. Fastest approach",
+        "10. Asteroid > 50k km/h",
     ],
     "📏 Distance & Size": [
-        "7. Sort by max estimated diameter",
-        "9. Closest approach date & distance",
+        "7. Max estimated diameter order",
+        "9. Closest approach date & miss distance",
         "14. Asteroids < 1 LD",
         "15. Asteroids < 0.05 AU",
-        "Bonus 3: Top 5 closest approaches",
+        "16. Abs_mag range (20-26)",
+        "17. Maximum asteroid diameter",
+        "18. Minimum estimated diameter",
+        "20. Miss_distance_lunar between 70 -120",
+        "23. Top 5 closest approaches",
     ],
     "📅 Temporal Analysis": [
-        "5. Month with most approaches",
-        "8. Closest approach getting nearer over time",
+        "5. Most approached month",
+        "8. Order by Miss distance nearer",
     ],
-    "🌟 Special Queries": [
-        "12. Brightest asteroid (lowest magnitude)",
-        "Bonus 1: Orbiting bodies (non-Earth)",
-        "Bonus 5: Frequent <1 LD asteroids",
+    "🌟 More common Queries": [
+        "12. Brightest asteroid",
+        "21. Orbiting bodies (non-Earth)",
+        "25. Frequent <1 LD asteroids",
     ],
 }
 
@@ -595,7 +644,7 @@ for category, queries_list in query_categories.items():
                 selected_query = query_label
 
 if selected_query is None:
-    selected_query = "1. Count asteroid approaches"
+    selected_query = "1. Each  asteroid approach Count"
 
 # ----------------------------
 # 9. Show selected query (section style)
@@ -692,7 +741,7 @@ else:
 # ----------------------------
 # 11. Colab launch instructions
 # ----------------------------
-st.markdown(
+"""st.markdown(
     """
     ---
     <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -732,4 +781,4 @@ st.markdown(
 - The dashboard works best with a stable internet connection  
 - Use the interactive filters to explore different aspects of asteroid data  
 """
-)
+)"""
