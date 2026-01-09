@@ -741,7 +741,8 @@ else:
 # ----------------------------
 # 11. Colab launch instructions
 # ----------------------------
-"""st.markdown(
+"""(
+st.markdown(
     """
     <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
                 padding: 2rem; border-radius: 10px; color: white; margin-top: 2rem;">
@@ -780,4 +781,5 @@ st.markdown(
 - The dashboard works best with a stable internet connection  
 - Use the interactive filters to explore different aspects of asteroid data  
 """
+)
 )"""
